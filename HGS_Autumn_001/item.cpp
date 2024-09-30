@@ -9,6 +9,7 @@
 #include "player3D.h"
 #include "manager.h"
 #include "score.h"
+#include "game.h"
 
 //========================================================================================================================
 // コンストラクタ
@@ -82,6 +83,11 @@ CItem* CItem::Create(D3DXVECTOR3 pos)
 	CItem* pItem = new CItem;
 
 	pItem->SetPos(pos);
+
+	pItem->SetPos({ pos.x,pos.y,pos.z * CGame::m_nCnt });
+
+	CGame::m_nCnt++;
+
 	pItem->Init();
 
 	return pItem;
