@@ -189,26 +189,10 @@ D3DXVECTOR3 CPlayer3D::InputPosPlayer()
 	{
 		m_nCntJumpgrace++;
 	}
-	//if (keyboard->GetPress(DIK_W))
-	//{
-	//	m_Move.z += sinf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//	m_Move.x += cosf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//}
-	//if (keyboard->GetPress(DIK_S))
-	//{
-	//	m_Move.z -= sinf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//	m_Move.x -= cosf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//}
 
 	// ƒWƒƒƒ“ƒvd—Íˆ—
 	m_Move.y -= m_fGravity;	// d—Í‰ÁZ
 
-
-	//// ‰æ–Ê‚ğ—h‚ç‚·ˆ—
-	//if (keyboard->GetTrigger(DIK_F1))
-	//{
-	//	CManager::GetCamera()->SetShake(120, 5.0f);
-	//}
 
 	return m_Move;
 }
