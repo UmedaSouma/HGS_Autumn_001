@@ -16,8 +16,12 @@
 #include "field.h"
 #include "obstacle.h"
 
+#include <random>
+
 int CGame::m_nDelayEnd = 0; // 倒してからリザルトになるまで
 bool CGame::m_Delay = false;
+int CGame::m_nCnt = 2;// 生成回数
+
 //===========================================================================================================
 // コンストラクタ
 //===========================================================================================================
@@ -43,7 +47,32 @@ HRESULT CGame::Init()
 
 	CField::Create(D3DXVECTOR3(40.0f, -9.0f, 10000.0f));
 
-	CObstacle::Create(D3DXVECTOR3(55.0f, -9.0f, 100.0f), CObstacle::OBSTACLETYPE::TYPE_DEATHZERO);
+	std::random_device rnd;                // 非決定的な乱数生成器でシード生成機を生成
+	std::mt19937 mt(rnd());                //  メルセンヌツイスターの32ビット版、引数は初期シード
+	std::uniform_int_distribution<> rand(1, 3);     // 開始の数値から終わりの数値の 範囲の一様乱数
+
+	
+	for (int nCnt = 0; nCnt < 100; nCnt++)
+	{
+		m_nRandNum[nCnt] = rand(mt);
+
+		switch (m_nRandNum[nCnt])
+		{
+		case 1:
+			CObstacle::Create(D3DXVECTOR3(10.0f, -9.0f, 100.0f), CObstacle::OBSTACLETYPE::TYPE_DEATHZERO);
+
+			break;
+		case 2:
+			CObstacle::Create(D3DXVECTOR3(40.0f, -9.0f, 100.0f), CObstacle::OBSTACLETYPE::TYPE_DEATHONE);
+
+			break;
+		case 3:
+			CObstacle::Create(D3DXVECTOR3(70.0f, -9.0f, 100.0f), CObstacle::OBSTACLETYPE::TYPE_STACK);
+
+			break;
+		}
+	}
+
 
 	//for (int Vertical = 0; Vertical < 5; Vertical++)
 	//{
