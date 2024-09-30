@@ -78,7 +78,7 @@ private:
 	int m_nMaxLife = m_MaxLife;
 	int m_nLife;		// 体力
 	int m_nCntDamage;	// ダメージ状態のカウント
-	int m_nCntJumpgrace;	// ジャンプの入力猶予
+	int m_nCntJumpgrace[2];	// ジャンプの入力猶予
 	
 public:
 	SKILL_STATE GetSkillstate(){ return m_skillstate; }	// スキルボタンの状態
@@ -95,6 +95,8 @@ public:
 	int GetLife() { return m_nLife; }
 
 	int GetMaxLife() { return m_MaxLife; }
+
+	int Getjump(int n) { return m_nCntJumpgrace[n]; }
 };
 
 

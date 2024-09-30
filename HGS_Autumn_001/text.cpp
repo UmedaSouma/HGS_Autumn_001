@@ -7,6 +7,7 @@
 #include "text.h"
 #include "manager.h"
 #include "score.h"
+#include "search.h"
 
 //===========================================================================================================
 // コンストラクタ
@@ -111,6 +112,9 @@ void CText::Draw(D3DXVECTOR2 fontpos, int fontsize, FONT_NAME font, D3DXCOLOR rg
 //===========================================================================================================
 void CText::DrawAll()
 {
+	CPlayer3D* pPlayer = nullptr;
+	pPlayer = CSearch::SearchObject(pPlayer, CObject::PLAYER);
+
 	if (m_bUse[TEXT_TEST])
 	{
 		Draw(
@@ -141,8 +145,9 @@ void CText::DrawAll()
 			50,
 			CText::FONT_BESTTEN_DOT,
 			{ 1.0f, 1.0f, 1.0f, 1.0f },
-			"SCORE %d"
-			, CScore::GetScore()
+			"SCORE %d,%d"
+			, pPlayer->Getjump(0)
+			, pPlayer->Getjump(1)
 		);
 	}
 }
