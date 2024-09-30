@@ -11,6 +11,7 @@
 #include "object.h"
 #include "input.h"
 #include "manager.h"
+#include "tutorial.h"
 
 // Ã“Iƒƒ“ƒo‚Ì‰Šú‰»
 
@@ -77,6 +78,11 @@ CScene* CScene::Create(MODE mode)
 
 	case MODE::MODE_GAME:
 		pScene = new CGame;
+
+		break;
+
+	case MODE::MODE_TUTORIAL:
+		pScene = new CTutorial;
 
 		break;
 

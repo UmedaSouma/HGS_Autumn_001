@@ -183,7 +183,7 @@ D3DXVECTOR3 CPlayer3D::InputPosPlayer()
 
 	//if (keyboard->GetPress(DIK_SPACE))
 	{
-		SetMove({ GetMove().x,GetMove().y,2.0f });
+		SetMove({ GetMove().x,GetMove().y,4.0f });
 	}
 
 	//if (keyboard->GetTrigger(DIK_F) && keyboard->GetTrigger(DIK_J) || (joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER) && joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER)))

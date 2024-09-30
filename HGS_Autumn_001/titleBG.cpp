@@ -29,9 +29,20 @@ HRESULT CTitleBG::Init()
 {
 	int nIdx = 0;
 
-	CTexture* pTexData = CManager::GetTexture();
-	nIdx = pTexData->Regist("data\\TEXTURE\\titleBG_000.png");
-	BindTexture(pTexData->GetAddress(nIdx));
+	if (CScene::GetMode() == CScene::MODE_TITLE)
+	{
+		CTexture* pTexData = CManager::GetTexture();
+		nIdx = pTexData->Regist("data\\TEXTURE\\HGStitle.png");
+		BindTexture(pTexData->GetAddress(nIdx));
+	}
+	else if (CScene::GetMode() == CScene::MODE_TUTORIAL)
+	{
+		CTexture* pTexData = CManager::GetTexture();
+		nIdx = pTexData->Regist("data\\TEXTURE\\Tutorial.png");
+		BindTexture(pTexData->GetAddress(nIdx));
+	}
+
+	
 
 	SetSize({ SCREEN_WIDTH ,SCREEN_HEIGHT ,0.0f });
 	SetPos({ SCREEN_WIDTH * 0.5f,SCREEN_HEIGHT * 0.5f,0.0f });

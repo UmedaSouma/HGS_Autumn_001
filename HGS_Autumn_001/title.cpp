@@ -10,6 +10,7 @@
 #include "renderer.h"
 #include "player3D.h"
 #include "field.h"
+#include "titleBG.h"
 
 CTitle::CTitle()
 {
@@ -23,12 +24,11 @@ HRESULT CTitle::Init()
 {
 	CScene::Init();
 
+	CTitleBG::Create();
+
 	CPlayer3D::Create({ 0.0f,0.0f,0.0f });
 
 	CField::Create({ 0.0f,-21.0f,0.0f });
-
-	CText* pText = CRenderer::GetText();
-	pText->SetText(CText::TEXT_SCORE);
 
 	return S_OK;
 }
@@ -49,7 +49,7 @@ void CTitle::Update()
 	{
 		CFade* pFade = CManager::GetFade();
 
-		pFade->SetFade(CScene::MODE_GAME);
+		pFade->SetFade(CScene::MODE_TUTORIAL);
 
 		//CManager::SetMode(CScene::MODE_GAME);
 	}
