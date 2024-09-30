@@ -62,7 +62,7 @@ void CItem::Update()
 	if (Collision())
 	{
 		Uninit();
-		CScore::SetScore(10000);
+		CScore::SetScore(50);
 	}
 }
 
