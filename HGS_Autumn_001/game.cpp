@@ -51,6 +51,7 @@ HRESULT CGame::Init()
 	std::mt19937 mt(rnd());                //  メルセンヌツイスターの32ビット版、引数は初期シード
 	std::uniform_int_distribution<> rand(1, 3);     // 開始の数値から終わりの数値の 範囲の一様乱数
 
+	m_nCnt = 2;
 	
 	for (int nCnt = 0; nCnt < 100; nCnt++)
 	{
