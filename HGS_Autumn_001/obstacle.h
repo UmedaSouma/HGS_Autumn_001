@@ -20,9 +20,10 @@ public:
 	typedef enum
 	{
 		TYPE_NONE = 0,
-		TYPE_DEATHZERO,	// 即死①
-		TYPE_DEATHONE,	// 即死②
-		TYPE_STACK,		// スタックする(敵との距離が近くなる)
+		TYPE_DEATHZERO,		// 即死①
+		TYPE_DEATHONE,		// 即死②
+		TYPE_DEATHTWO,		// 即死③
+		TYPE_STACK,			// スタックする(敵との距離が近くなる)
 		TYPE_MAX,
 	}OBSTACLETYPE;
 	CObstacle(int nPriority = PRIORITY_DEFAULT);					// コンストラクタ
@@ -36,7 +37,6 @@ public:
 
 
 	static inline const float MAX_SIZE = 5.0f;						// 障害物のサイズ
-
 private:
 	OBSTACLETYPE m_Type;											// 種類
 };

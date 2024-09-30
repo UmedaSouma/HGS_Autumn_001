@@ -181,7 +181,7 @@ D3DXVECTOR3 CPlayer3D::InputPosPlayer()
 		return m_Move;
 	}
 
-	if (keyboard->GetPress(DIK_SPACE))
+	//if (keyboard->GetPress(DIK_SPACE))
 	{
 		SetMove({ GetMove().x,GetMove().y,2.0f });
 	}

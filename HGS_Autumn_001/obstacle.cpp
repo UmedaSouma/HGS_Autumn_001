@@ -10,6 +10,7 @@
 #include "search.h"
 #include "manager.h"
 #include "player3D.h"
+#include "game.h"
 
 //========================================================================================================================
 // コンストラクタ
@@ -37,11 +38,16 @@ HRESULT CObstacle::Init()
 	switch (m_Type)
 	{
 	case OBSTACLETYPE::TYPE_DEATHZERO:
-		SetModelAddress("data\\model\\BlockRun001.x");		// アドレスを保存しておく
+		SetModelAddress("data\\model\\DeathTrap.x");		// アドレスを保存しておく
 		SetSize({ MAX_SIZE + 5.0f ,MAX_SIZE ,MAX_SIZE });
 
 		break;
 	case OBSTACLETYPE::TYPE_DEATHONE:
+		SetModelAddress("data\\model\\SmallDeathTrap.x");	// アドレスを保存しておく
+		SetSize({ MAX_SIZE + 5.0f ,MAX_SIZE ,MAX_SIZE });
+
+		break;
+	case OBSTACLETYPE::TYPE_DEATHTWO:
 		SetModelAddress("data\\model\\BlockRun001.x");		// アドレスを保存しておく
 		SetSize({ MAX_SIZE + 5.0f ,MAX_SIZE ,MAX_SIZE });
 
@@ -100,11 +106,12 @@ CObstacle* CObstacle::Create(D3DXVECTOR3 pos, OBSTACLETYPE nType)
 
 	pObstacle->m_Type = nType;
 
-	pObstacle->SetPos(pos);
+	pObstacle->SetPos({ pos.x,pos.y,pos.z * CGame::m_nCnt});
 
+	CGame::m_nCnt++;
 	pObstacle->Init();
 
-	return nullptr;
+	return pObstacle;
 }
 
 //========================================================================================================================
@@ -122,7 +129,7 @@ bool CObstacle::Collision()
 	// プレイヤーの情報を持ってくる
 	D3DXVECTOR3 pos_P = pPlayer->GetPos();
 	D3DXVECTOR3 size_P = pPlayer->GetSize();
-	float fCurrentLife = pPlayer->GetLife();
+	int nCurrentLife = pPlayer->GetLife();
 
 	switch (m_Type)
 	{
@@ -143,6 +150,22 @@ bool CObstacle::Collision()
 
 		break;
 	case TYPE_DEATHONE:
+		//        障害物     と     プレイヤー    の位置が重なったとき
+		if (pos.x - size.x <= pos_P.x + size_P.x
+			&& pos.x + size.x >= pos_P.x - size_P.x
+			&& pos.y - size.y <= pos_P.y + size_P.y
+			&& pos.y + size.y >= pos_P.y - size_P.y
+			&& pos.z - size.z <= pos_P.z + size_P.z
+			&& pos.z + size.z >= pos_P.z - size_P.z
+			)
+		{
+			pPlayer->SetLife(0);	// プレイヤーのライフをなくす
+
+			return true;
+		}
+
+		break;
+	case TYPE_DEATHTWO:
 		//        障害物     と     プレイヤー    の位置が重なったとき
 		if (pos.x - size.x <= pos_P.x + size_P.x
 			&& pos.x + size.x >= pos_P.x - size_P.x
