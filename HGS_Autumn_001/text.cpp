@@ -139,8 +139,8 @@ void CText::DrawAll()
 		Draw(
 			{ 900.0f, 15.0f },
 			50,
-			CText::FONT_ZENMARUGOTHIC_BLACK,
-			{ .0f, .0f, .0f, 1.0f },
+			CText::FONT_BESTTEN_DOT,
+			{ 1.0f, 1.0f, 1.0f, 1.0f },
 			"SCORE %d"
 			, CScore::GetScore()
 		);
