@@ -13,6 +13,7 @@ CObject3D::CObject3D(int nPriority) : CObject(nPriority)
 , m_pVtxTexture(nullptr)
 , m_length(0.0f)
 , m_Angle(0.0f)
+,m_fNum(0.0f)
 {
 }
 
@@ -61,12 +62,17 @@ HRESULT CObject3D::Init()
 		pVtx[nCnt].col = D3DCOLOR_RGBA(255, 255, 255, 255);
 	}
 
-	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
+	//pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
+	//pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
+	//pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
+	//pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 
-	m_rot.x = (D3DX_PI * -0.5f);
+	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
+	pVtx[1].tex = D3DXVECTOR2(m_fNum, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(m_fNum, 1.0f);
+
+	//m_rot.x = (D3DX_PI * -0.5f);
 
 	m_pVtxBuff->Unlock();
 
@@ -103,7 +109,16 @@ void CObject3D::Uninit()
 //===========================================================================================================
 void CObject3D::Update()
 {
+	//VERTEX_3D* pVtx;
+
+	////頂点バッファをロックし、頂点情報へのポインタ取得
+	//m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+
+	//m_pVtxBuff->Unlock();
+
 	UpdateMatrix();
+
 }
 
 //===========================================================================================================
@@ -212,4 +227,12 @@ void CObject3D::BindTexture(LPDIRECT3DTEXTURE9 pTex)
 
 void CObject3D::SetLength(D3DXVECTOR3 sizeA, D3DXVECTOR3 sizeB)
 {
+}
+
+//========================================================================================================================
+// テクスチャの分割数設定
+//========================================================================================================================
+void CObject3D::SetDivision(float fNum)
+{
+	m_fNum = fNum;
 }

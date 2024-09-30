@@ -33,6 +33,7 @@ public:
 	float GetLength() { return m_length; }
 	void SetAngle(float sizeA, float sizeB);
 	float GetAngle() { return m_Angle; }
+	void SetDivision(float fNum);	// テクスチャの分割数設定
 
 	const D3DXMATRIX& GetMatrix() const { return m_mtxWorld; }
 
@@ -46,6 +47,7 @@ private:
 	float m_length;	// 範囲	
 					//	|ー>円の判定に使う物
 	float m_Angle;	// 角度
+	float m_fNum;	// テクスチャの分割数
 	D3DXMATRIX m_mtxWorld;
 };
 

@@ -9,7 +9,7 @@
 #include "game.h"
 #include "search.h"
 #include "block3D.h"
-
+#include "field.h"
 
 // 静的メンバ変数の初期化
 int CPlayer3D::m_nFragmentNum = 0;
@@ -331,14 +331,14 @@ D3DXVECTOR3 CPlayer3D::VerticalCollision(CObject* pObj)
 
 	if (type == TYPE::BLOCK)
 	{
-		CBlock3D* pBlock = (CBlock3D*)pObj;
+		CField* pBlock = (CField*)pObj;
 
 		D3DXVECTOR3 BlockPos = pBlock->GetPos();
 		D3DXVECTOR3 BlockSize = pBlock->GetSize();
 
-		BlockSize.x *= 0.5f;
-		BlockSize.y *= 0.5f;
-		BlockSize.z *= 0.5f;
+		//BlockSize.x *= 0.5f;
+		//BlockSize.y *= 0.5f;
+		//BlockSize.z *= 0.5f;
 
 		if (BlockPos.z - BlockSize.z < PlayerPos.z + PlayerSize.z		// プレイヤーがブロックにめり込んだ時
 			&& BlockPos.x - BlockSize.x < PlayerPos.x + PlayerSize.x	// -------------------------------------------
@@ -386,14 +386,14 @@ D3DXVECTOR3 CPlayer3D::HorizonCollision(CObject* pObj)
 
 	if (type == TYPE::BLOCK)
 	{
-		CBlock3D* pBlock = (CBlock3D*)pObj;
+		CField* pBlock = (CField*)pObj;
 
 		D3DXVECTOR3 BlockPos = pBlock->GetPos();
 		D3DXVECTOR3 BlockSize = pBlock->GetSize();
 
-		BlockSize.x *= 0.5f;
-		BlockSize.y *= 0.5f;
-		BlockSize.z *= 0.5f;
+		//BlockSize.x *= 0.5f;
+		//BlockSize.y *= 0.5f;
+		//BlockSize.z *= 0.5f;
 
 		if (BlockPos.x + BlockSize.x > PlayerPos.x - PlayerSize.x		// プレイヤーがブロックにめり込んだ時
 			&& BlockPos.y - BlockSize.y < PlayerPos.y + PlayerSize.y	// -------------------------------------------
@@ -442,14 +442,14 @@ D3DXVECTOR3 CPlayer3D::HighLowCollision(CObject* pObj)
 	if (type == TYPE::BLOCK)
 	{// タイプがブロックだった場合
 
-		CBlock3D* pBlock = (CBlock3D*)pObj;
+		CField* pBlock = (CField*)pObj;
 
 		D3DXVECTOR3 BlockPos = pBlock->GetPos();
 		D3DXVECTOR3 BlockSize = pBlock->GetSize();
 
-		BlockSize.x *= 0.5f;
-		BlockSize.y *= 0.5f;
-		BlockSize.z *= 0.5f;
+		//BlockSize.x *= 0.5f;
+		//BlockSize.y *= 0.5f;
+		//BlockSize.z *= 0.5f;
 
 		// プレイヤーがブロックに頭をぶつける
 		if (BlockPos.y - BlockSize.y < PlayerPos.y + PlayerSize.y		// プレイヤーがブロックにめり込んだ時
@@ -466,17 +466,17 @@ D3DXVECTOR3 CPlayer3D::HighLowCollision(CObject* pObj)
 		}
 
 		// プレイヤーがブロックに乗る
-		else if (BlockPos.y + BlockSize.y > PlayerPos.y - PlayerSize.y	// プレイヤーがブロックにめり込んだ時
+		else if (BlockPos.y + BlockSize.y > PlayerPos.y /*- PlayerSize.y*/	// プレイヤーがブロックにめり込んだ時
 			&& BlockPos.x - BlockSize.x < PlayerPos.x + PlayerSize.x	// -------------------------------------------
 			&& BlockPos.x + BlockSize.x > PlayerPos.x - PlayerSize.x	// プレイヤーがブロックの
 			&& BlockPos.z - BlockSize.z < PlayerPos.z + PlayerSize.z	// xz範囲内にいたとき
 			&& BlockPos.z + BlockSize.z > PlayerPos.z - PlayerSize.z	// -------------------------------------------
-			&& BlockPos.y + BlockSize.y <= m_oldPos.y - PlayerSize.y	// プレイヤーの過去の位置がブロックより上にあったとき
+			&& BlockPos.y + BlockSize.y <= m_oldPos.y /*- PlayerSize.y*/	// プレイヤーの過去の位置がブロックより上にあったとき
 			)
 		{
 			m_bUseJump = false;
 			m_Move.y = 0;
-			SetPos({ PlayerPos.x,PlayerPos.y = (BlockPos.y + BlockSize.y + PlayerSize.y),PlayerPos.z });	// プレイヤーがブロックの上に乗る
+			SetPos({ PlayerPos.x,PlayerPos.y = (BlockPos.y + BlockSize.y /*+ PlayerSize.y*/),PlayerPos.z });	// プレイヤーがブロックの上に乗る
 		}
 	}
 
