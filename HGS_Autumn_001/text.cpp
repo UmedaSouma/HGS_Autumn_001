@@ -145,9 +145,22 @@ void CText::DrawAll()
 			50,
 			CText::FONT_BESTTEN_DOT,
 			{ 1.0f, 1.0f, 1.0f, 1.0f },
-			"SCORE %d,%d"
-			, pPlayer->Getjump(0)
-			, pPlayer->Getjump(1)
+			"SCORE %d"
+			, CScore::GetScore()
+			
+		);
+	}
+
+	if (m_bUse[TEXT_SCORE_RESULT])
+	{
+		Draw(
+			{ 0.0f, 300.0f },
+			50,
+			CText::FONT_BESTTEN_DOT,
+			{ 1.0f, 1.0f, 1.0f, 1.0f },
+			"SCORE %d"
+			, CScore::GetScore()
+
 		);
 	}
 }

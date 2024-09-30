@@ -29,6 +29,8 @@ HRESULT CResult::Init()
 {
 	CScene::Init();
 
+	CText* pText = CRenderer::GetText();
+	pText->SetText(CText::TEXT_SCORE_RESULT);
 
 	return S_OK;
 }
@@ -38,6 +40,9 @@ HRESULT CResult::Init()
 //===========================================================================================================
 void CResult::Uninit()
 {
+	CText* pText = CRenderer::GetText();
+	pText->UnSetText(CText::TEXT_SCORE_RESULT);
+
 	CScene::Uninit();
 }
 

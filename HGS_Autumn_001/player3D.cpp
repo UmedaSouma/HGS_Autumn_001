@@ -325,6 +325,11 @@ void CPlayer3D::DeathPlayer()
 {
 	if (GetPos().y <= -50.0f || m_nLife <= 0)
 	{// 穴に落ちたとき || 体力がなくなったとき
+
+		CFade* pFade = CManager::GetFade();
+		pFade->SetFade(CScene::MODE_RESULT);
+		return;
+
 		m_nLife = m_MaxLife;			// 体力を最大値に戻す
 		SetPos({ 40.0f, 25.0f, 0.0f });	// リスポーンさせる
 		m_bSlip = true;					// すり抜けさせる
