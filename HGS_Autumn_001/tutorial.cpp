@@ -26,9 +26,6 @@ HRESULT CTutorial::Init()
 
 	CTitleBG::Create();
 
-	CText* pText = CRenderer::GetText();
-	pText->SetText(CText::TEXT_SCORE);
-
 	return S_OK;
 }
 

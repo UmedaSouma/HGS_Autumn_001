@@ -15,6 +15,7 @@
 #include "item.h"
 #include "field.h"
 #include "obstacle.h"
+#include "score.h"
 
 #include <random>
 
@@ -43,6 +44,11 @@ HRESULT CGame::Init()
 {
 	CScene::Init();
 
+	CText* pText = CRenderer::GetText();
+	pText->SetText(CText::TEXT_SCORE);
+
+	CScore::ResetScore();
+
 	CPlayer3D::Create({ 0.0f,0.0f,0.0f });
 
 	CField::Create(D3DXVECTOR3(40.0f, -9.0f, 10000.0f));
@@ -51,7 +57,7 @@ HRESULT CGame::Init()
 	std::mt19937 mt(rnd());                //  メルセンヌツイスターの32ビット版、引数は初期シード
 	std::uniform_int_distribution<> rand(1, 3);     // 開始の数値から終わりの数値の 範囲の一様乱数
 
-	m_nCnt = 2;
+	m_nCnt = 3;
 	
 	for (int nCnt = 0; nCnt < 100; nCnt++)
 	{
@@ -115,6 +121,9 @@ void CGame::SetInitUI()
 //===========================================================================================================
 void CGame::Uninit()
 {
+	CText* pText = CRenderer::GetText();
+	pText->UnSetText(CText::TEXT_SCORE);
+
 	CScene::Uninit();
 }
 

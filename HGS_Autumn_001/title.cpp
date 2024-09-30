@@ -11,6 +11,7 @@
 #include "player3D.h"
 #include "field.h"
 #include "titleBG.h"
+#include "score.h"
 
 CTitle::CTitle()
 {
@@ -23,6 +24,8 @@ CTitle::~CTitle()
 HRESULT CTitle::Init()
 {
 	CScene::Init();
+
+	CScore::ResetScore();
 
 	CTitleBG::Create();
 
