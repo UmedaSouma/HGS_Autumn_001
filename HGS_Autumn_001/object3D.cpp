@@ -13,7 +13,8 @@ CObject3D::CObject3D(int nPriority) : CObject(nPriority)
 , m_pVtxTexture(nullptr)
 , m_length(0.0f)
 , m_Angle(0.0f)
-,m_fNum(0.0f)
+,m_fHorizon(0.0f)
+,m_fVertical(0.0f)
 {
 }
 
@@ -68,9 +69,9 @@ HRESULT CObject3D::Init()
 	//pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	pVtx[1].tex = D3DXVECTOR2(m_fNum, 0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-	pVtx[3].tex = D3DXVECTOR2(m_fNum, 1.0f);
+	pVtx[1].tex = D3DXVECTOR2(m_fHorizon, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(0.0f, m_fVertical);
+	pVtx[3].tex = D3DXVECTOR2(m_fHorizon, m_fVertical);
 
 	//m_rot.x = (D3DX_PI * -0.5f);
 
@@ -232,7 +233,9 @@ void CObject3D::SetLength(D3DXVECTOR3 sizeA, D3DXVECTOR3 sizeB)
 //========================================================================================================================
 // テクスチャの分割数設定
 //========================================================================================================================
-void CObject3D::SetDivision(float fNum)
+void CObject3D::SetDivision(float fVertical,float fHorizon)
 {
-	m_fNum = fNum;
+	m_fVertical = fVertical;	// 奥行
+
+	m_fHorizon = fHorizon;		// 横
 }
