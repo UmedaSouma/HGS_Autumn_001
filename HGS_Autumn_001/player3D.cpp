@@ -28,6 +28,7 @@ CPlayer3D::CPlayer3D(int nPriority) :CModel(nPriority)
 , m_bDammage(false)
 , m_nLife(0)
 , m_nCntDamage(0)
+
 {
 }
 
@@ -43,6 +44,9 @@ CPlayer3D::~CPlayer3D()
 //========================================================================================================================
 HRESULT CPlayer3D::Init()
 {
+
+	m_nCntJumpgrace[0] = 0;
+	m_nCntJumpgrace[1] = 0;
 	
 	if (CScene::GetMode() == CScene::MODE_TITLE)
 	{
@@ -52,6 +56,8 @@ HRESULT CPlayer3D::Init()
 		int nIdx = pModeldata->Regist(GetModelAddress());	// モデルデータの登録
 		BindModel(pModeldata->GetAddress(nIdx));			// モデル情報をセットする
 		SetModelIdx(nIdx);
+
+		SetRot({ 0.25,0.0f,0.0f });
 	}
 	else
 	{
@@ -91,7 +97,11 @@ void CPlayer3D::Update()
 
 	if (CScene::GetMode() == CScene::MODE_TITLE)
 	{
-		SetRot({ 0.0f,GetRot().y+ 0.01f,0.0f });
+		SetRot({ GetRot().x,GetRot().y+ 0.01f,0.0f });
+	}
+	else
+	{
+		SetRot({ 0.0f,D3DX_PI,0.0f });
 	}
 
 	// 当たり判定消す(後々関数化
@@ -166,52 +176,91 @@ D3DXVECTOR3 CPlayer3D::InputPosPlayer()
 	CInputKeyBoard* keyboard = CManager::GetKeyboard();
 	CInputJoypad* joypad = CManager::GetJoypad();
 
+	if (CScene::GetMode() == CScene::MODE_TITLE)
+	{
+		return m_Move;
+	}
 
 	if (keyboard->GetPress(DIK_SPACE))
 	{
 		SetMove({ GetMove().x,GetMove().y,2.0f });
 	}
 
-	if (keyboard->GetTrigger(DIK_F) && keyboard->GetTrigger(DIK_J) || (joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER) && joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER)))
+	//if (keyboard->GetTrigger(DIK_F) && keyboard->GetTrigger(DIK_J) || (joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER) && joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER)))
+	//{
+	//	Jump();
+	//}
+	//if (((keyboard->GetTrigger(DIK_F) || joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER))/* && m_nCntJumpgrace < 7*/)
+	//	|| ((keyboard->GetTrigger(DIK_J) || joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER))/* && m_nCntJumpgrace < 7*/))
+	//{
+	//	if ((keyboard->GetTrigger(DIK_J) || joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER))
+	//		|| (keyboard->GetTrigger(DIK_F) || joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER)))
+	//	{
+	//		Jump();
+	//	}
+	//}
+	//if (m_nCntJumpgrace[0] == 0)
+	{
+		if (keyboard->GetTrigger(DIK_F) || joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER)/*|| joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER)*/)
+		{
+			m_nCntJumpgrace[0] = 1;
+		}
+	}
+	//if (m_nCntJumpgrace[1] == 0)
+	{
+		if (keyboard->GetTrigger(DIK_J) || joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER)/*|| joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER)*/)
+		{
+			m_nCntJumpgrace[1] = 1;
+		}
+	}
+	
+	
+
+	if (((m_nCntJumpgrace[0] <= 10 && m_nCntJumpgrace[0] >= 1)
+		&& (m_nCntJumpgrace[1] >= 1 && m_nCntJumpgrace[1] <= 10))/*&& m_nCntJumpgrace[1] == 1*/
+		/*&& m_nCntJumpgrace[1] <= 10)*/)
 	{
 		Jump();
 	}
-	if ((keyboard->GetTrigger(DIK_F) || joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER)) && m_nCntJumpgrace < 5)
-	{
-		if (keyboard->GetTrigger(DIK_J) || joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER))
-		{
-			Jump();
-		}
-	}
-	else if ((keyboard->GetTrigger(DIK_J) || joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER)) && m_nCntJumpgrace < 5)
-	{
-		if (keyboard->GetTrigger(DIK_F) || joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER))
-		{
-			Jump();
-		}
-	}
-	else if (keyboard->GetPress(DIK_F) || joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER))
+	//else if ()
+	//{
+	//	Jump();
+	//}
+
+	//else if ()
+	//{
+	//	if (keyboard->GetTrigger(DIK_F) || joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER))
+	//	{
+	//		Jump();
+	//	}
+	//}
+	if (keyboard->GetPress(DIK_F) || joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER))
 	{
 		m_Move.x += sinf(-D3DX_PI * 0.5f) * m_fSpeed;
 		m_Move.y += cosf(-D3DX_PI * 0.5f) * m_fSpeed;
 
+		SetRot({ GetRot().x,GetRot().y, -D3DX_PI * 0.15f });
+
 		//SetDirection(CModel::DIRECTION_LEFT);
 	}
-	else if (keyboard->GetPress(DIK_J) || joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER))
+	if (keyboard->GetPress(DIK_J) || joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER))
 	{
 		m_Move.x += sinf(-D3DX_PI * 0.5f) * -m_fSpeed;
 		m_Move.y += cosf(-D3DX_PI * 0.5f) * -m_fSpeed;
 
+		SetRot({ GetRot().x,GetRot().y ,D3DX_PI * 0.15f });
+
 		//SetDirection(CModel::DIRECTION_RIGHT);
 	}
-	else
-	{
-		m_nCntJumpgrace = 0;
-	}
 
-	if (joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER) || joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER))
+	if (m_nCntJumpgrace[0] >= 1)
 	{
-		m_nCntJumpgrace++;
+		m_nCntJumpgrace[0]++;
+		
+	}
+	if (m_nCntJumpgrace[1] >= 1)
+	{
+		m_nCntJumpgrace[1]++;
 	}
 
 	// ジャンプ重力処理
@@ -233,6 +282,9 @@ void CPlayer3D::Jump()
 	{
 		m_Move.y += m_fJumpPower;	// ジャンプ
 		m_bUseJump = true;
+
+		m_nCntJumpgrace[0] = 0;
+		m_nCntJumpgrace[1] = 0;
 	}
 
 }
@@ -273,6 +325,11 @@ void CPlayer3D::DeathPlayer()
 {
 	if (GetPos().y <= -50.0f || m_nLife <= 0)
 	{// 穴に落ちたとき || 体力がなくなったとき
+
+		CFade* pFade = CManager::GetFade();
+		pFade->SetFade(CScene::MODE_RESULT);
+		return;
+
 		m_nLife = m_MaxLife;			// 体力を最大値に戻す
 		SetPos({ 40.0f, 25.0f, 0.0f });	// リスポーンさせる
 		m_bSlip = true;					// すり抜けさせる
