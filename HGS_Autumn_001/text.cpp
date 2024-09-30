@@ -137,7 +137,7 @@ void CText::DrawAll()
 	if (m_bUse[TEXT_SCORE])
 	{
 		Draw(
-			{ 1000.0f, 30.0f },
+			{ 900.0f, 15.0f },
 			50,
 			CText::FONT_ZENMARUGOTHIC_BLACK,
 			{ .0f, .0f, .0f, 1.0f },
