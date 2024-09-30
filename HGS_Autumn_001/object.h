@@ -24,6 +24,7 @@ public:
 		MODEL,			// モデル
 		FADE,			// フェード
 		PARTICLE,		// パーティクル
+		OBSTACLE,		// 障害物
 		BASE,
 		SWORD,			// 剣
 		MAX
