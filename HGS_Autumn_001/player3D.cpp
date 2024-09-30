@@ -147,19 +147,47 @@ D3DXVECTOR3 CPlayer3D::InputPosPlayer()
 	CInputKeyBoard* keyboard = CManager::GetKeyboard();
 	CInputJoypad* joypad = CManager::GetJoypad();
 
-	if (keyboard->GetPress(DIK_A) || joypad->GetPress(CInputJoypad::JOYKEY_LEFT))
+
+	if (keyboard->GetTrigger(DIK_F) && keyboard->GetTrigger(DIK_J) || (joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER) && joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER)))
+	{
+		Jump();
+	}
+	if ((keyboard->GetTrigger(DIK_F) || joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER)) && m_nCntJumpgrace < 5)
+	{
+		if (keyboard->GetTrigger(DIK_J) || joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER))
+		{
+			Jump();
+		}
+	}
+	else if ((keyboard->GetTrigger(DIK_J) || joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER)) && m_nCntJumpgrace < 5)
+	{
+		if (keyboard->GetTrigger(DIK_F) || joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER))
+		{
+			Jump();
+		}
+	}
+	else if (keyboard->GetPress(DIK_F) || joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER))
 	{
 		m_Move.x += sinf(-D3DX_PI * 0.5f) * m_fSpeed;
 		m_Move.y += cosf(-D3DX_PI * 0.5f) * m_fSpeed;
 
-		SetDirection(CModel::DIRECTION_LEFT);
+		//SetDirection(CModel::DIRECTION_LEFT);
 	}
-	if (keyboard->GetPress(DIK_D)||joypad->GetPress(CInputJoypad::JOYKEY_RIGHT))
+	else if (keyboard->GetPress(DIK_J) || joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER))
 	{
 		m_Move.x += sinf(-D3DX_PI * 0.5f) * -m_fSpeed;
 		m_Move.y += cosf(-D3DX_PI * 0.5f) * -m_fSpeed;
 
-		SetDirection(CModel::DIRECTION_RIGHT);
+		//SetDirection(CModel::DIRECTION_RIGHT);
+	}
+	else
+	{
+		m_nCntJumpgrace = 0;
+	}
+
+	if (joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER) || joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER))
+	{
+		m_nCntJumpgrace++;
 	}
 	//if (keyboard->GetPress(DIK_W))
 	//{
@@ -173,7 +201,8 @@ D3DXVECTOR3 CPlayer3D::InputPosPlayer()
 	//}
 
 	// ジャンプ重力処理
-	Jump();
+	m_Move.y -= m_fGravity;	// 重力加算
+
 
 	//// 画面を揺らす処理
 	//if (keyboard->GetTrigger(DIK_F1))
@@ -194,14 +223,10 @@ void CPlayer3D::Jump()
 
 	if (!m_bUseJump)
 	{
-		if (keyboard->GetTrigger(DIK_SPACE) || joypad->GetTrigger(CInputJoypad::JOYKEY_A))
-		{
-			m_Move.y += m_fJumpPower;	// ジャンプ
-			m_bUseJump = true;
-		}
+		m_Move.y += m_fJumpPower;	// ジャンプ
+		m_bUseJump = true;
 	}
 
-	m_Move.y -= m_fGravity;	// 重力加算
 }
 
 //===========================================================================================================
