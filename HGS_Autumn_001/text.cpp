@@ -6,6 +6,7 @@
 //===========================================================================================================================================================
 #include "text.h"
 #include "manager.h"
+#include "score.h"
 
 //===========================================================================================================
 // コンストラクタ
@@ -118,7 +119,7 @@ void CText::DrawAll()
 			CText::FONT_ZENMARUGOTHIC_BLACK,
 			{ .0f, .0f, .0f, 1.0f },
 			"こんにちは hello world!! %d"
-			,15
+			, CScore::GetScore()
 		);
 	}
 	
@@ -130,6 +131,18 @@ void CText::DrawAll()
 			CText::FONT_BESTTEN_DOT,
 			{ .0f, .0f, .0f, 1.0f },
 			"Enter or StartButton"
+		);
+	}
+
+	if (m_bUse[TEXT_SCORE])
+	{
+		Draw(
+			{ 1000.0f, 30.0f },
+			50,
+			CText::FONT_ZENMARUGOTHIC_BLACK,
+			{ .0f, .0f, .0f, 1.0f },
+			"SCORE %d"
+			, CScore::GetScore()
 		);
 	}
 }

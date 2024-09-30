@@ -8,6 +8,7 @@
 #include "search.h"
 #include "player3D.h"
 #include "manager.h"
+#include "score.h"
 
 //========================================================================================================================
 // コンストラクタ
@@ -61,7 +62,7 @@ void CItem::Update()
 	if (Collision())
 	{
 		Uninit();
-
+		CScore::SetScore(50);
 	}
 }
 

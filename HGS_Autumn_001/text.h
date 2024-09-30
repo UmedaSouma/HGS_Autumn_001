@@ -8,6 +8,7 @@ public:
 	{
 		TEXT_TEST=0,
 		TEXT_PRESSENTER,
+		TEXT_SCORE,
 		TEXT_MAX
 	}TEXT_TYPE;
 
