@@ -9,7 +9,7 @@
 #include "game.h"
 #include "search.h"
 #include "block3D.h"
-
+#include "field.h"
 
 // 静的メンバ変数の初期化
 int CPlayer3D::m_nFragmentNum = 0;
@@ -44,7 +44,7 @@ CPlayer3D::~CPlayer3D()
 HRESULT CPlayer3D::Init()
 {
 	// モデルの設定
-	SetModelAddress("data\\model\\player_001.x");		// アドレスを保存しておく
+	SetModelAddress("data\\model\\BallPlayer.x");		// アドレスを保存しておく
 	CModeldata* pModeldata = CManager::GetModeldata();	// modeldata のポインタを持ってくる
 	int nIdx = pModeldata->Regist(GetModelAddress());	// モデルデータの登録
 	BindModel(pModeldata->GetAddress(nIdx));			// モデル情報をセットする
@@ -74,6 +74,8 @@ void CPlayer3D::Uninit()
 void CPlayer3D::Update()
 {
 	D3DXVECTOR3 pos = GetPos();
+
+	
 
 	// 当たり判定消す(後々関数化
 	{
@@ -147,39 +149,57 @@ D3DXVECTOR3 CPlayer3D::InputPosPlayer()
 	CInputKeyBoard* keyboard = CManager::GetKeyboard();
 	CInputJoypad* joypad = CManager::GetJoypad();
 
-	if (keyboard->GetPress(DIK_A) || joypad->GetPress(CInputJoypad::JOYKEY_LEFT))
+
+	if (keyboard->GetPress(DIK_SPACE))
+	{
+		SetMove({ GetMove().x,GetMove().y,2.0f });
+	}
+
+	if (keyboard->GetTrigger(DIK_F) && keyboard->GetTrigger(DIK_J) || (joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER) && joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER)))
+	{
+		Jump();
+	}
+	if ((keyboard->GetTrigger(DIK_F) || joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER)) && m_nCntJumpgrace < 5)
+	{
+		if (keyboard->GetTrigger(DIK_J) || joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER))
+		{
+			Jump();
+		}
+	}
+	else if ((keyboard->GetTrigger(DIK_J) || joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER)) && m_nCntJumpgrace < 5)
+	{
+		if (keyboard->GetTrigger(DIK_F) || joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER))
+		{
+			Jump();
+		}
+	}
+	else if (keyboard->GetPress(DIK_F) || joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER))
 	{
 		m_Move.x += sinf(-D3DX_PI * 0.5f) * m_fSpeed;
 		m_Move.y += cosf(-D3DX_PI * 0.5f) * m_fSpeed;
 
-		SetDirection(CModel::DIRECTION_LEFT);
+		//SetDirection(CModel::DIRECTION_LEFT);
 	}
-	if (keyboard->GetPress(DIK_D)||joypad->GetPress(CInputJoypad::JOYKEY_RIGHT))
+	else if (keyboard->GetPress(DIK_J) || joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER))
 	{
 		m_Move.x += sinf(-D3DX_PI * 0.5f) * -m_fSpeed;
 		m_Move.y += cosf(-D3DX_PI * 0.5f) * -m_fSpeed;
 
-		SetDirection(CModel::DIRECTION_RIGHT);
+		//SetDirection(CModel::DIRECTION_RIGHT);
 	}
-	//if (keyboard->GetPress(DIK_W))
-	//{
-	//	m_Move.z += sinf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//	m_Move.x += cosf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//}
-	//if (keyboard->GetPress(DIK_S))
-	//{
-	//	m_Move.z -= sinf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//	m_Move.x -= cosf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//}
+	else
+	{
+		m_nCntJumpgrace = 0;
+	}
+
+	if (joypad->GetPress(CInputJoypad::JOYKEY_LEFT_SHOULDER) || joypad->GetPress(CInputJoypad::JOYKEY_RIGHT_SHOULDER))
+	{
+		m_nCntJumpgrace++;
+	}
 
 	// ジャンプ重力処理
-	Jump();
+	m_Move.y -= m_fGravity;	// 重力加算
 
-	//// 画面を揺らす処理
-	//if (keyboard->GetTrigger(DIK_F1))
-	//{
-	//	CManager::GetCamera()->SetShake(120, 5.0f);
-	//}
 
 	return m_Move;
 }
@@ -194,14 +214,10 @@ void CPlayer3D::Jump()
 
 	if (!m_bUseJump)
 	{
-		if (keyboard->GetTrigger(DIK_SPACE) || joypad->GetTrigger(CInputJoypad::JOYKEY_A))
-		{
-			m_Move.y += m_fJumpPower;	// ジャンプ
-			m_bUseJump = true;
-		}
+		m_Move.y += m_fJumpPower;	// ジャンプ
+		m_bUseJump = true;
 	}
 
-	m_Move.y -= m_fGravity;	// 重力加算
 }
 
 //===========================================================================================================
@@ -331,14 +347,14 @@ D3DXVECTOR3 CPlayer3D::VerticalCollision(CObject* pObj)
 
 	if (type == TYPE::BLOCK)
 	{
-		CBlock3D* pBlock = (CBlock3D*)pObj;
+		CField* pBlock = (CField*)pObj;
 
 		D3DXVECTOR3 BlockPos = pBlock->GetPos();
 		D3DXVECTOR3 BlockSize = pBlock->GetSize();
 
-		BlockSize.x *= 0.5f;
-		BlockSize.y *= 0.5f;
-		BlockSize.z *= 0.5f;
+		//BlockSize.x *= 0.5f;
+		//BlockSize.y *= 0.5f;
+		//BlockSize.z *= 0.5f;
 
 		if (BlockPos.z - BlockSize.z < PlayerPos.z + PlayerSize.z		// プレイヤーがブロックにめり込んだ時
 			&& BlockPos.x - BlockSize.x < PlayerPos.x + PlayerSize.x	// -------------------------------------------
@@ -386,14 +402,14 @@ D3DXVECTOR3 CPlayer3D::HorizonCollision(CObject* pObj)
 
 	if (type == TYPE::BLOCK)
 	{
-		CBlock3D* pBlock = (CBlock3D*)pObj;
+		CField* pBlock = (CField*)pObj;
 
 		D3DXVECTOR3 BlockPos = pBlock->GetPos();
 		D3DXVECTOR3 BlockSize = pBlock->GetSize();
 
-		BlockSize.x *= 0.5f;
-		BlockSize.y *= 0.5f;
-		BlockSize.z *= 0.5f;
+		//BlockSize.x *= 0.5f;
+		//BlockSize.y *= 0.5f;
+		//BlockSize.z *= 0.5f;
 
 		if (BlockPos.x + BlockSize.x > PlayerPos.x - PlayerSize.x		// プレイヤーがブロックにめり込んだ時
 			&& BlockPos.y - BlockSize.y < PlayerPos.y + PlayerSize.y	// -------------------------------------------
@@ -442,14 +458,14 @@ D3DXVECTOR3 CPlayer3D::HighLowCollision(CObject* pObj)
 	if (type == TYPE::BLOCK)
 	{// タイプがブロックだった場合
 
-		CBlock3D* pBlock = (CBlock3D*)pObj;
+		CField* pBlock = (CField*)pObj;
 
 		D3DXVECTOR3 BlockPos = pBlock->GetPos();
 		D3DXVECTOR3 BlockSize = pBlock->GetSize();
 
-		BlockSize.x *= 0.5f;
-		BlockSize.y *= 0.5f;
-		BlockSize.z *= 0.5f;
+		//BlockSize.x *= 0.5f;
+		//BlockSize.y *= 0.5f;
+		//BlockSize.z *= 0.5f;
 
 		// プレイヤーがブロックに頭をぶつける
 		if (BlockPos.y - BlockSize.y < PlayerPos.y + PlayerSize.y		// プレイヤーがブロックにめり込んだ時
@@ -466,17 +482,17 @@ D3DXVECTOR3 CPlayer3D::HighLowCollision(CObject* pObj)
 		}
 
 		// プレイヤーがブロックに乗る
-		else if (BlockPos.y + BlockSize.y > PlayerPos.y - PlayerSize.y	// プレイヤーがブロックにめり込んだ時
+		else if (BlockPos.y + BlockSize.y > PlayerPos.y /*- PlayerSize.y*/	// プレイヤーがブロックにめり込んだ時
 			&& BlockPos.x - BlockSize.x < PlayerPos.x + PlayerSize.x	// -------------------------------------------
 			&& BlockPos.x + BlockSize.x > PlayerPos.x - PlayerSize.x	// プレイヤーがブロックの
 			&& BlockPos.z - BlockSize.z < PlayerPos.z + PlayerSize.z	// xz範囲内にいたとき
 			&& BlockPos.z + BlockSize.z > PlayerPos.z - PlayerSize.z	// -------------------------------------------
-			&& BlockPos.y + BlockSize.y <= m_oldPos.y - PlayerSize.y	// プレイヤーの過去の位置がブロックより上にあったとき
+			&& BlockPos.y + BlockSize.y <= m_oldPos.y /*- PlayerSize.y*/	// プレイヤーの過去の位置がブロックより上にあったとき
 			)
 		{
 			m_bUseJump = false;
 			m_Move.y = 0;
-			SetPos({ PlayerPos.x,PlayerPos.y = (BlockPos.y + BlockSize.y + PlayerSize.y),PlayerPos.z });	// プレイヤーがブロックの上に乗る
+			SetPos({ PlayerPos.x,PlayerPos.y = (BlockPos.y + BlockSize.y /*+ PlayerSize.y*/),PlayerPos.z });	// プレイヤーがブロックの上に乗る
 		}
 	}
 

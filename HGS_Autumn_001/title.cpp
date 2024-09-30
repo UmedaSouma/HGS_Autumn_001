@@ -22,7 +22,7 @@ HRESULT CTitle::Init()
 	CScene::Init();
 
 	CText* pText = CRenderer::GetText();
-	pText->SetText(CText::TEXT_TEST);
+	pText->SetText(CText::TEXT_SCORE);
 
 	return S_OK;
 }

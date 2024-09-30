@@ -13,6 +13,7 @@
 #include "player3D.h"
 #include "block3D.h"
 #include "item.h"
+#include "field.h"
 
 int CGame::m_nDelayEnd = 0; // “|‚µ‚Ä‚©‚çƒŠƒUƒ‹ƒg‚É‚È‚é‚Ü‚Å
 bool CGame::m_Delay = false;
@@ -39,13 +40,15 @@ HRESULT CGame::Init()
 
 	CPlayer3D::Create({ 0.0f,0.0f,0.0f });
 
-	for (int Vertical = 0; Vertical < 5; Vertical++)
-	{
-		for (int Horizon = 0; Horizon < 1000; Horizon++)
-		{
-			CBlock3D::Create({ 0.0f + (Vertical * 20.0f),-30.0f,0.0f + (Horizon * 20.0f) });
-		}
-	}
+	CField::Create(D3DXVECTOR3(40.0f, -9.0f, 10000.0f));
+
+	//for (int Vertical = 0; Vertical < 5; Vertical++)
+	//{
+	//	for (int Horizon = 0; Horizon < 1000; Horizon++)
+	//	{
+	//		CBlock3D::Create({ 0.0f + (Vertical * 20.0f),-30.0f,0.0f + (Horizon * 20.0f) });
+	//	}
+	//}
 
 	CItem::Create({ 30.0f,0.0f,0.0f });
 
