@@ -61,15 +61,18 @@ HRESULT CGame::Init()
 		{
 		case 1:
 			CObstacle::Create(D3DXVECTOR3(10.0f, -9.0f, 100.0f), CObstacle::OBSTACLETYPE::TYPE_DEATHZERO);
-
+			CObstacle::Create(D3DXVECTOR3(40.0f, -9.0f, 100.0f), CObstacle::OBSTACLETYPE::TYPE_DEATHONE);
+			CItem::Create(D3DXVECTOR3(70.0f, -9.0f, 100.0f));
 			break;
 		case 2:
 			CObstacle::Create(D3DXVECTOR3(40.0f, -9.0f, 100.0f), CObstacle::OBSTACLETYPE::TYPE_DEATHONE);
-
+			CObstacle::Create(D3DXVECTOR3(70.0f, -9.0f, 100.0f), CObstacle::OBSTACLETYPE::TYPE_DEATHONE);
+			CItem::Create(D3DXVECTOR3(10.0f, -9.0f, 100.0f));
 			break;
 		case 3:
-			CObstacle::Create(D3DXVECTOR3(70.0f, -9.0f, 100.0f), CObstacle::OBSTACLETYPE::TYPE_STACK);
-
+			CObstacle::Create(D3DXVECTOR3(70.0f, -9.0f, 100.0f), CObstacle::OBSTACLETYPE::TYPE_DEATHTWO);
+			CObstacle::Create(D3DXVECTOR3(10.0f, -9.0f, 100.0f), CObstacle::OBSTACLETYPE::TYPE_DEATHTWO);
+			CItem::Create(D3DXVECTOR3(40.0f, -9.0f, 100.0f));
 			break;
 		}
 	}
@@ -83,7 +86,7 @@ HRESULT CGame::Init()
 	//	}
 	//}
 
-	CItem::Create({ 30.0f,0.0f,0.0f });
+	//CItem::Create({ 30.0f,0.0f,0.0f });
 
 	return S_OK;
 }
