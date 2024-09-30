@@ -44,7 +44,7 @@ CPlayer3D::~CPlayer3D()
 HRESULT CPlayer3D::Init()
 {
 	// モデルの設定
-	SetModelAddress("data\\model\\player_001.x");		// アドレスを保存しておく
+	SetModelAddress("data\\model\\BallPlayer.x");		// アドレスを保存しておく
 	CModeldata* pModeldata = CManager::GetModeldata();	// modeldata のポインタを持ってくる
 	int nIdx = pModeldata->Regist(GetModelAddress());	// モデルデータの登録
 	BindModel(pModeldata->GetAddress(nIdx));			// モデル情報をセットする
@@ -74,6 +74,8 @@ void CPlayer3D::Uninit()
 void CPlayer3D::Update()
 {
 	D3DXVECTOR3 pos = GetPos();
+
+	
 
 	// 当たり判定消す(後々関数化
 	{
@@ -147,6 +149,11 @@ D3DXVECTOR3 CPlayer3D::InputPosPlayer()
 	CInputKeyBoard* keyboard = CManager::GetKeyboard();
 	CInputJoypad* joypad = CManager::GetJoypad();
 
+
+	if (keyboard->GetPress(DIK_SPACE))
+	{
+		SetMove({ GetMove().x,GetMove().y,2.0f });
+	}
 
 	if (keyboard->GetTrigger(DIK_F) && keyboard->GetTrigger(DIK_J) || (joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER) && joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER)))
 	{
