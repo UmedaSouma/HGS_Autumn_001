@@ -8,6 +8,7 @@
 #include "search.h"
 #include "player3D.h"
 #include "manager.h"
+#include "score.h"
 
 //========================================================================================================================
 // コンストラクタ
@@ -32,7 +33,7 @@ HRESULT CItem::Init()
 	SetSize({ 5.0f,10.0f,10.0f });
 
 	// モデルの設定
-	SetModelAddress("data\\model\\player_001.x");		// アドレスを保存しておく
+	SetModelAddress("data\\model\\item.x");		// アドレスを保存しておく
 	CModeldata* pModeldata = CManager::GetModeldata();	// modeldata のポインタを持ってくる
 	int nIdx = pModeldata->Regist(GetModelAddress());	// モデルデータの登録
 	BindModel(pModeldata->GetAddress(nIdx));			// モデル情報をセットする
@@ -60,7 +61,8 @@ void CItem::Update()
 
 	if (Collision())
 	{
-		
+		Uninit();
+		CScore::SetScore(10000);
 	}
 }
 

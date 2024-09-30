@@ -40,7 +40,7 @@ HRESULT CGame::Init()
 
 	CPlayer3D::Create({ 0.0f,0.0f,0.0f });
 
-	CField::Create(D3DXVECTOR3(40.0f, -9.0f, 0.0f));
+	CField::Create(D3DXVECTOR3(40.0f, -9.0f, 10000.0f));
 
 	//for (int Vertical = 0; Vertical < 5; Vertical++)
 	//{

@@ -43,12 +43,26 @@ CPlayer3D::~CPlayer3D()
 //========================================================================================================================
 HRESULT CPlayer3D::Init()
 {
-	// モデルの設定
-	SetModelAddress("data\\model\\player_001.x");		// アドレスを保存しておく
-	CModeldata* pModeldata = CManager::GetModeldata();	// modeldata のポインタを持ってくる
-	int nIdx = pModeldata->Regist(GetModelAddress());	// モデルデータの登録
-	BindModel(pModeldata->GetAddress(nIdx));			// モデル情報をセットする
-	SetModelIdx(nIdx);
+	
+	if (CScene::GetMode() == CScene::MODE_TITLE)
+	{
+		// モデルの設定
+		SetModelAddress("data\\model\\statue.x");		// アドレスを保存しておく
+		CModeldata* pModeldata = CManager::GetModeldata();	// modeldata のポインタを持ってくる
+		int nIdx = pModeldata->Regist(GetModelAddress());	// モデルデータの登録
+		BindModel(pModeldata->GetAddress(nIdx));			// モデル情報をセットする
+		SetModelIdx(nIdx);
+	}
+	else
+	{
+		// モデルの設定
+		SetModelAddress("data\\model\\BallPlayer.x");		// アドレスを保存しておく
+		CModeldata* pModeldata = CManager::GetModeldata();	// modeldata のポインタを持ってくる
+		int nIdx = pModeldata->Regist(GetModelAddress());	// モデルデータの登録
+		BindModel(pModeldata->GetAddress(nIdx));			// モデル情報をセットする
+		SetModelIdx(nIdx);
+	}
+	
 
 	CModel::Init();
 
@@ -74,6 +88,11 @@ void CPlayer3D::Uninit()
 void CPlayer3D::Update()
 {
 	D3DXVECTOR3 pos = GetPos();
+
+	if (CScene::GetMode() == CScene::MODE_TITLE)
+	{
+		SetRot({ 0.0f,GetRot().y+ 0.01f,0.0f });
+	}
 
 	// 当たり判定消す(後々関数化
 	{
@@ -148,6 +167,11 @@ D3DXVECTOR3 CPlayer3D::InputPosPlayer()
 	CInputJoypad* joypad = CManager::GetJoypad();
 
 
+	if (keyboard->GetPress(DIK_SPACE))
+	{
+		SetMove({ GetMove().x,GetMove().y,2.0f });
+	}
+
 	if (keyboard->GetTrigger(DIK_F) && keyboard->GetTrigger(DIK_J) || (joypad->GetTrigger(CInputJoypad::JOYKEY_LEFT_SHOULDER) && joypad->GetTrigger(CInputJoypad::JOYKEY_RIGHT_SHOULDER)))
 	{
 		Jump();
@@ -189,26 +213,10 @@ D3DXVECTOR3 CPlayer3D::InputPosPlayer()
 	{
 		m_nCntJumpgrace++;
 	}
-	//if (keyboard->GetPress(DIK_W))
-	//{
-	//	m_Move.z += sinf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//	m_Move.x += cosf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//}
-	//if (keyboard->GetPress(DIK_S))
-	//{
-	//	m_Move.z -= sinf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//	m_Move.x -= cosf(-D3DX_PI * 0.5f) * -m_fSpeed;
-	//}
 
 	// ジャンプ重力処理
 	m_Move.y -= m_fGravity;	// 重力加算
 
-
-	//// 画面を揺らす処理
-	//if (keyboard->GetTrigger(DIK_F1))
-	//{
-	//	CManager::GetCamera()->SetShake(120, 5.0f);
-	//}
 
 	return m_Move;
 }
@@ -293,7 +301,16 @@ CPlayer3D* CPlayer3D::Create(D3DXVECTOR3 pos)
 void CPlayer3D::SetTargetCamera()
 {
 	CCamera* pCamera = CManager::GetCamera();	// camera を持ってくる
-	pCamera->SetTargetPos(GetPos());			// camera に playerpos を入れる
+	if (CScene::GetMode() == CScene::MODE_TITLE)
+	{
+		pCamera->SetTargetPos({ GetPos().x ,GetPos().y-20,GetPos().z+80.0f });			// camera に playerpos を入れる
+	}
+	else
+	{
+		pCamera->SetTargetPos(GetPos());			// camera に playerpos を入れる
+	}
+	
+	
 }
 
 //========================================================================================================================

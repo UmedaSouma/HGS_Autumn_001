@@ -1,20 +1,17 @@
 //===========================================================================================================================================================
 // 
-// title.cppÇÃÉwÉbÉ_Å[
+// Score [score.cpp]
 // Author : souma umeda
 // 
 //===========================================================================================================================================================
-#include "main.h"
-#include "scene.h"
+#include "score.h"
 
-class CTitle :public CScene
+int CScore::m_nScore = 0;
+
+CScore::CScore()
 {
-public:
-	CTitle();
-	~CTitle()override;
-	HRESULT Init()override;
-	void Uninit()override;
-	void Update()override;
-	void Draw()override;
-private:
-};
+}
+
+CScore::~CScore()
+{
+}

@@ -1,20 +1,25 @@
+#pragma once
 //===========================================================================================================================================================
 // 
-// title.cppのヘッダー
+// score.cppのヘッダー [score.h]
 // Author : souma umeda
 // 
 //===========================================================================================================================================================
+#ifndef _SCORE_H_
+#define _SCORE_H_
 #include "main.h"
-#include "scene.h"
 
-class CTitle :public CScene
+class CScore
 {
 public:
-	CTitle();
-	~CTitle()override;
-	HRESULT Init()override;
-	void Uninit()override;
-	void Update()override;
-	void Draw()override;
+	CScore();
+	~CScore();
+
+	static void SetScore(int addscore) { m_nScore += addscore; }
+	static int GetScore() { return m_nScore; }
 private:
+	static int m_nScore;
 };
+
+
+#endif // !SCORE_H_
